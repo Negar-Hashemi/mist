@@ -28,12 +28,21 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Install Yarn
+        run: npm install -g yarn  
+
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libxtst-dev libxss1 libnss3 xvfb  
+
       - name: Install dependencies
-        run: npm install --force
+        run: yarn install
 
       - name: Testing on OS (${{ matrix.os }}) with Node.js (version ${{ matrix.node-version }}) attempt ${{ matrix.attempt }}
         run: |
           echo "Run attempt: ${{ matrix.attempt }}"
-          npm test:unit
+          yarn test:unit
 
     continue-on-error: false
